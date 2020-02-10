@@ -1,0 +1,460 @@
+<Activity mc:Ignorable="sap sap2010" x:Class="AUX_Report" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:sd="clr-namespace:System.Data;assembly=System.Data" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="in_modifiedTeamlistDT" Type="InArgument(sd:DataTable)" />
+    <x:Property Name="inputDT" Type="InArgument(sd:DataTable)" />
+    <x:Property Name="in_intermediateAUXreportFilePath" Type="InArgument(x:String)" />
+    <x:Property Name="in_testAUXreportFilePath" Type="InArgument(x:String)" />
+    <x:Property Name="in_pathToInputData" Type="InArgument(x:String)" />
+    <x:Property Name="out_AuxReportFinalDT" Type="OutArgument(sd:DataTable)" />
+  </x:Members>
+  <mva:VisualBasic.Settings>
+    <x:Null />
+  </mva:VisualBasic.Settings>
+  <sap:VirtualizedContainerService.HintSize>641,3348</sap:VirtualizedContainerService.HintSize>
+  <sap2010:WorkflowViewState.IdRef>AUX_Report_1</sap2010:WorkflowViewState.IdRef>
+  <TextExpression.NamespacesForImplementation>
+    <scg:List x:TypeArguments="x:String" Capacity="22">
+      <x:String>System.Activities</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>System.Activities.Expressions</x:String>
+      <x:String>System.Activities.Validation</x:String>
+      <x:String>System.Activities.XamlIntegration</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>System</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Diagnostics</x:String>
+      <x:String>System.Drawing</x:String>
+      <x:String>System.IO</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Net.Mail</x:String>
+      <x:String>System.Xml</x:String>
+      <x:String>System.Xml.Linq</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>System.Windows.Markup</x:String>
+      <x:String>System.Xml.Serialization</x:String>
+    </scg:List>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <scg:List x:TypeArguments="AssemblyReference" Capacity="19">
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Drawing</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>UiPath.Excel</AssemblyReference>
+      <AssemblyReference>UiPath.Mail</AssemblyReference>
+    </scg:List>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence DisplayName="AUX_Report" sap:VirtualizedContainerService.HintSize="755,3141" sap2010:WorkflowViewState.IdRef="Sequence_1">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="x:String" Name="str_in_DT" />
+      <Variable x:TypeArguments="sd:DataTable" Name="auxReportOBDT" />
+      <Variable x:TypeArguments="sd:DataTable" Name="auxReportIBDT" />
+      <Variable x:TypeArguments="x:Boolean" Name="pathExistenceOfIntermediateFile" />
+      <Variable x:TypeArguments="sd:DataTable" Name="builtupDT" />
+      <Variable x:TypeArguments="x:TimeSpan" Name="EB" />
+      <Variable x:TypeArguments="x:TimeSpan" Name="FB" />
+      <Variable x:TypeArguments="x:TimeSpan" Name="NV" />
+      <Variable x:TypeArguments="x:TimeSpan" Name="Others" />
+      <Variable x:TypeArguments="x:TimeSpan" Name="considerable_hours" />
+      <Variable x:TypeArguments="x:TimeSpan" Name="system_lag" />
+      <Variable x:TypeArguments="sd:DataTable" Name="MergedAUXDT" />
+      <Variable x:TypeArguments="sd:DataTable" Name="calculatedDT" />
+      <Variable x:TypeArguments="sd:DataTable" Name="joined1DT" />
+      <Variable x:TypeArguments="sd:DataTable" Name="joined2DT" />
+    </Sequence.Variables>
+    <sap:WorkflowViewStateService.ViewState>
+      <scg:Dictionary x:TypeArguments="x:String, x:Object">
+        <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+      </scg:Dictionary>
+    </sap:WorkflowViewStateService.ViewState>
+    <Sequence DisplayName="assinging filepath name and deleting them if the files already exists" sap:VirtualizedContainerService.HintSize="713,860" sap2010:WorkflowViewState.IdRef="Sequence_7">
+      <Sequence.Variables>
+        <Variable x:TypeArguments="x:Boolean" Name="pathExistanceOfTestFile" />
+      </Sequence.Variables>
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          <x:Boolean x:Key="IsPinned">False</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+      <ui:PathExists DisplayName="Path Exists of intermediate file" Exists="[pathExistenceOfIntermediateFile]" sap:VirtualizedContainerService.HintSize="484,89" sap2010:WorkflowViewState.IdRef="PathExists_1" Path="[in_intermediateAUXreportFilePath]" PathType="File" />
+      <If Condition="[pathExistenceOfIntermediateFile]" DisplayName="checking if the intermediate file exists and deleteing it" sap:VirtualizedContainerService.HintSize="484,262" sap2010:WorkflowViewState.IdRef="If_1">
+        <If.Then>
+          <Sequence sap:VirtualizedContainerService.HintSize="242,114" sap2010:WorkflowViewState.IdRef="Sequence_5">
+            <sap:WorkflowViewStateService.ViewState>
+              <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+              </scg:Dictionary>
+            </sap:WorkflowViewStateService.ViewState>
+            <ui:Delete ContinueOnError="{x:Null}" sap:VirtualizedContainerService.HintSize="200,22" sap2010:WorkflowViewState.IdRef="Delete_1" Path="[in_intermediateAUXreportFilePath]" />
+          </Sequence>
+        </If.Then>
+      </If>
+      <ui:PathExists DisplayName="Path Exists of test file" Exists="[pathExistanceOfTestFile]" sap:VirtualizedContainerService.HintSize="484,89" sap2010:WorkflowViewState.IdRef="PathExists_2" Path="[in_testAUXreportFilePath]" PathType="File" />
+      <If Condition="[pathExistanceOfTestFile]" DisplayName="checking if the test file exists and deleteing it" sap:VirtualizedContainerService.HintSize="484,208" sap2010:WorkflowViewState.IdRef="If_2">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+        <If.Then>
+          <ui:Delete ContinueOnError="{x:Null}" sap:VirtualizedContainerService.HintSize="200,22" sap2010:WorkflowViewState.IdRef="Delete_2" Path="[in_testAUXreportFilePath]" />
+        </If.Then>
+      </If>
+    </Sequence>
+    <ui:ReadRange AddHeaders="True" DataTable="[auxReportOBDT]" DisplayName="Read Range" sap:VirtualizedContainerService.HintSize="713,87" sap2010:WorkflowViewState.IdRef="ReadRange_1" PreserveFormat="True" Range="A2" SheetName="AUX Report (OB)" WorkbookPath="[in_pathToInputData]">
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          <x:Boolean x:Key="IsPinned">False</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+    </ui:ReadRange>
+    <If Condition="[auxReportOBDT.Columns.Contains(&quot;TR&quot;)]" DisplayName="If TR  exists in OB datatable" sap:VirtualizedContainerService.HintSize="713,51" sap2010:WorkflowViewState.IdRef="If_3">
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+          <x:Boolean x:Key="IsPinned">False</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+      <If.Then>
+        <ui:InvokeCode ContinueOnError="{x:Null}" Code="inputDT.Columns(&quot;Column0&quot;).ColumnName=&quot;Date&quot;&#xD;&#xA;inputDT.Columns(&quot;Column1&quot;).ColumnName=&quot;Agent_Name&quot;&#xD;&#xA;inputDT.Columns(&quot;Column2&quot;).ColumnName=&quot;Login_ID&quot;&#xD;&#xA;inputDT.Columns(&quot;Column3&quot;).ColumnName=&quot;AUX_Time&quot;&#xD;&#xA;inputDT.Columns(&quot;Column4&quot;).ColumnName=&quot;CQ&quot;&#xD;&#xA;inputDT.Columns(&quot;Column5&quot;).ColumnName=&quot;EB&quot;&#xD;&#xA;inputDT.Columns(&quot;Column6&quot;).ColumnName=&quot;FB&quot;&#xD;&#xA;inputDT.Columns(&quot;Column7&quot;).ColumnName=&quot;Lagged&quot;&#xD;&#xA;inputDT.Columns(&quot;Column8&quot;).ColumnName=&quot;Login&quot;&#xD;&#xA;inputDT.Columns(&quot;Column9&quot;).ColumnName=&quot;MB&quot;&#xD;&#xA;inputDT.Columns(&quot;Column10&quot;).ColumnName=&quot;NV&quot;&#xD;&#xA;inputDT.Columns(&quot;Column11&quot;).ColumnName=&quot;SB&quot;&#xD;&#xA;inputDT.Columns(&quot;Column12&quot;).ColumnName=&quot;SE&quot;&#xD;&#xA;inputDT.Columns(&quot;Column13&quot;).ColumnName=&quot;TR&quot;" DisplayName="Changing Column names of OB" sap:VirtualizedContainerService.HintSize="334,164" sap2010:WorkflowViewState.IdRef="InvokeCode_1">
+          <ui:InvokeCode.Arguments>
+            <InOutArgument x:TypeArguments="sd:DataTable" x:Key="inputDT">[auxReportOBDT]</InOutArgument>
+          </ui:InvokeCode.Arguments>
+          <sap:WorkflowViewStateService.ViewState>
+            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+              <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+              <x:Boolean x:Key="IsPinned">False</x:Boolean>
+            </scg:Dictionary>
+          </sap:WorkflowViewStateService.ViewState>
+        </ui:InvokeCode>
+      </If.Then>
+      <If.Else>
+        <ui:InvokeCode ContinueOnError="{x:Null}" Code="inputDT.Columns(&quot;Column0&quot;).ColumnName=&quot;Date&quot;&#xD;&#xA;inputDT.Columns(&quot;Column1&quot;).ColumnName=&quot;Agent_Name&quot;&#xD;&#xA;inputDT.Columns(&quot;Column2&quot;).ColumnName=&quot;Login_ID&quot;&#xD;&#xA;inputDT.Columns(&quot;Column3&quot;).ColumnName=&quot;AUX_Time&quot;&#xD;&#xA;inputDT.Columns(&quot;Column4&quot;).ColumnName=&quot;CQ&quot;&#xD;&#xA;inputDT.Columns(&quot;Column5&quot;).ColumnName=&quot;EB&quot;&#xD;&#xA;inputDT.Columns(&quot;Column6&quot;).ColumnName=&quot;FB&quot;&#xD;&#xA;inputDT.Columns(&quot;Column7&quot;).ColumnName=&quot;Lagged&quot;&#xD;&#xA;inputDT.Columns(&quot;Column8&quot;).ColumnName=&quot;Login&quot;&#xD;&#xA;inputDT.Columns(&quot;Column9&quot;).ColumnName=&quot;MB&quot;&#xD;&#xA;inputDT.Columns(&quot;Column10&quot;).ColumnName=&quot;NV&quot;&#xD;&#xA;inputDT.Columns(&quot;Column11&quot;).ColumnName=&quot;SB&quot;&#xD;&#xA;inputDT.Columns(&quot;Column12&quot;).ColumnName=&quot;SE&quot;" DisplayName="Changing Column names of OB" sap:VirtualizedContainerService.HintSize="334,164" sap2010:WorkflowViewState.IdRef="InvokeCode_3">
+          <ui:InvokeCode.Arguments>
+            <InOutArgument x:TypeArguments="sd:DataTable" x:Key="inputDT">[auxReportOBDT]</InOutArgument>
+          </ui:InvokeCode.Arguments>
+          <sap:WorkflowViewStateService.ViewState>
+            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+              <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+              <x:Boolean x:Key="IsPinned">False</x:Boolean>
+            </scg:Dictionary>
+          </sap:WorkflowViewStateService.ViewState>
+        </ui:InvokeCode>
+      </If.Else>
+    </If>
+    <ui:ReadRange AddHeaders="True" DataTable="[auxReportIBDT]" DisplayName="Read Range" sap:VirtualizedContainerService.HintSize="713,87" sap2010:WorkflowViewState.IdRef="ReadRange_2" PreserveFormat="True" Range="A2" SheetName="AUX Report (IB)" WorkbookPath="[in_pathToInputData]">
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          <x:Boolean x:Key="IsPinned">False</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+    </ui:ReadRange>
+    <If Condition="[auxReportOBDT.Columns.Contains(&quot;TR&quot;)]" sap:VirtualizedContainerService.HintSize="713,312" sap2010:WorkflowViewState.IdRef="If_4">
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          <x:Boolean x:Key="IsPinned">False</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+      <If.Then>
+        <ui:InvokeCode ContinueOnError="{x:Null}" Code="inputDT.Columns(&quot;Column0&quot;).ColumnName=&quot;Date&quot;&#xD;&#xA;inputDT.Columns(&quot;Column1&quot;).ColumnName=&quot;Agent_Name&quot;&#xD;&#xA;inputDT.Columns(&quot;Column2&quot;).ColumnName=&quot;Login_ID&quot;&#xD;&#xA;inputDT.Columns(&quot;Column3&quot;).ColumnName=&quot;AUX_Time&quot;&#xD;&#xA;inputDT.Columns(&quot;Column4&quot;).ColumnName=&quot;CQ&quot;&#xD;&#xA;inputDT.Columns(&quot;Column5&quot;).ColumnName=&quot;Lagged&quot;&#xD;&#xA;inputDT.Columns(&quot;Column6&quot;).ColumnName=&quot;Login&quot;&#xD;&#xA;inputDT.Columns(&quot;Column7&quot;).ColumnName=&quot;MB&quot;&#xD;&#xA;inputDT.Columns(&quot;Column8&quot;).ColumnName=&quot;SB&quot;&#xD;&#xA;inputDT.Columns(&quot;Column9&quot;).ColumnName=&quot;SE&quot;&#xD;&#xA;inputDT.Columns(&quot;Column10&quot;).ColumnName=&quot;TR&quot;" DisplayName="Changing Column names of IB" sap:VirtualizedContainerService.HintSize="334,164" sap2010:WorkflowViewState.IdRef="InvokeCode_2">
+          <ui:InvokeCode.Arguments>
+            <InOutArgument x:TypeArguments="sd:DataTable" x:Key="inputDT">[auxReportIBDT]</InOutArgument>
+          </ui:InvokeCode.Arguments>
+          <sap:WorkflowViewStateService.ViewState>
+            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+              <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+              <x:Boolean x:Key="IsPinned">False</x:Boolean>
+            </scg:Dictionary>
+          </sap:WorkflowViewStateService.ViewState>
+        </ui:InvokeCode>
+      </If.Then>
+      <If.Else>
+        <ui:InvokeCode ContinueOnError="{x:Null}" Code="inputDT.Columns(&quot;Column0&quot;).ColumnName=&quot;Date&quot;&#xD;&#xA;inputDT.Columns(&quot;Column1&quot;).ColumnName=&quot;Agent_Name&quot;&#xD;&#xA;inputDT.Columns(&quot;Column2&quot;).ColumnName=&quot;Login_ID&quot;&#xD;&#xA;inputDT.Columns(&quot;Column3&quot;).ColumnName=&quot;AUX_Time&quot;&#xD;&#xA;inputDT.Columns(&quot;Column4&quot;).ColumnName=&quot;CQ&quot;&#xD;&#xA;inputDT.Columns(&quot;Column5&quot;).ColumnName=&quot;Lagged&quot;&#xD;&#xA;inputDT.Columns(&quot;Column6&quot;).ColumnName=&quot;Login&quot;&#xD;&#xA;inputDT.Columns(&quot;Column7&quot;).ColumnName=&quot;MB&quot;&#xD;&#xA;inputDT.Columns(&quot;Column8&quot;).ColumnName=&quot;SB&quot;&#xD;&#xA;inputDT.Columns(&quot;Column9&quot;).ColumnName=&quot;SE&quot;" DisplayName="Changing Column names of IB" sap:VirtualizedContainerService.HintSize="334,164" sap2010:WorkflowViewState.IdRef="InvokeCode_4">
+          <ui:InvokeCode.Arguments>
+            <InOutArgument x:TypeArguments="sd:DataTable" x:Key="inputDT">[auxReportIBDT]</InOutArgument>
+          </ui:InvokeCode.Arguments>
+          <sap:WorkflowViewStateService.ViewState>
+            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+              <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+              <x:Boolean x:Key="IsPinned">False</x:Boolean>
+            </scg:Dictionary>
+          </sap:WorkflowViewStateService.ViewState>
+        </ui:InvokeCode>
+      </If.Else>
+    </If>
+    <Sequence DisplayName="Checking output of dt" sap:VirtualizedContainerService.HintSize="713,66" sap2010:WorkflowViewState.IdRef="Sequence_8">
+      <Sequence.Variables>
+        <Variable x:TypeArguments="x:String" Name="variable1" />
+      </Sequence.Variables>
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+          <x:Boolean x:Key="IsPinned">False</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+      <ui:OutputDataTable DataTable="[auxReportIBDT]" DisplayName="Output Data Table" sap:VirtualizedContainerService.HintSize="334,22" sap2010:WorkflowViewState.IdRef="OutputDataTable_1" Text="[str_in_DT]" />
+      <ui:MessageBox Caption="{x:Null}" ChosenButton="{x:Null}" Buttons="Ok" DisplayName="Message Box" sap:VirtualizedContainerService.HintSize="334,59" sap2010:WorkflowViewState.IdRef="MessageBox_1" Text="[str_in_DT]" TopMost="True" />
+    </Sequence>
+    <ui:BuildDataTable DataTable="[builtupDT]" DisplayName="Build Data Table" sap:VirtualizedContainerService.HintSize="713,59" sap2010:WorkflowViewState.IdRef="BuildDataTable_1" TableInfo="&lt;NewDataSet&gt;&#xA;  &lt;xs:schema id=&quot;NewDataSet&quot; xmlns=&quot;&quot; xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:msdata=&quot;urn:schemas-microsoft-com:xml-msdata&quot;&gt;&#xA;    &lt;xs:element name=&quot;NewDataSet&quot; msdata:IsDataSet=&quot;true&quot; msdata:MainDataTable=&quot;TableName&quot; msdata:UseCurrentLocale=&quot;true&quot;&gt;&#xA;      &lt;xs:complexType&gt;&#xA;        &lt;xs:choice minOccurs=&quot;0&quot; maxOccurs=&quot;unbounded&quot;&gt;&#xA;          &lt;xs:element name=&quot;TableName&quot;&gt;&#xA;            &lt;xs:complexType&gt;&#xA;              &lt;xs:sequence&gt;&#xA;                &lt;xs:element name=&quot;Date&quot; type=&quot;xs:string&quot; minOccurs=&quot;0&quot; /&gt;&#xA;                &lt;xs:element name=&quot;Agent_Name&quot; type=&quot;xs:string&quot; minOccurs=&quot;0&quot; /&gt;&#xA;                &lt;xs:element name=&quot;Login_ID&quot; type=&quot;xs:string&quot; minOccurs=&quot;0&quot; /&gt;&#xA;                &lt;xs:element name=&quot;AUX_Time&quot; type=&quot;xs:duration&quot; minOccurs=&quot;0&quot; /&gt;&#xA;                &lt;xs:element name=&quot;CQ&quot; type=&quot;xs:duration&quot; minOccurs=&quot;0&quot; /&gt;&#xA;                &lt;xs:element name=&quot;EB&quot; type=&quot;xs:duration&quot; minOccurs=&quot;0&quot; /&gt;&#xA;                &lt;xs:element name=&quot;FB&quot; type=&quot;xs:duration&quot; minOccurs=&quot;0&quot; /&gt;&#xA;                &lt;xs:element name=&quot;Lagged&quot; type=&quot;xs:duration&quot; minOccurs=&quot;0&quot; /&gt;&#xA;                &lt;xs:element name=&quot;Login&quot; type=&quot;xs:duration&quot; minOccurs=&quot;0&quot; /&gt;&#xA;                &lt;xs:element name=&quot;MB&quot; type=&quot;xs:duration&quot; minOccurs=&quot;0&quot; /&gt;&#xA;                &lt;xs:element name=&quot;NV&quot; type=&quot;xs:duration&quot; minOccurs=&quot;0&quot; /&gt;&#xA;                &lt;xs:element name=&quot;SB&quot; type=&quot;xs:duration&quot; minOccurs=&quot;0&quot; /&gt;&#xA;                &lt;xs:element name=&quot;SE&quot; type=&quot;xs:duration&quot; minOccurs=&quot;0&quot; /&gt;&#xA;                &lt;xs:element name=&quot;TR&quot; type=&quot;xs:duration&quot; minOccurs=&quot;0&quot; /&gt;&#xA;                &lt;xs:element name=&quot;Others&quot; type=&quot;xs:duration&quot; minOccurs=&quot;0&quot; /&gt;&#xA;              &lt;/xs:sequence&gt;&#xA;            &lt;/xs:complexType&gt;&#xA;          &lt;/xs:element&gt;&#xA;        &lt;/xs:choice&gt;&#xA;      &lt;/xs:complexType&gt;&#xA;    &lt;/xs:element&gt;&#xA;  &lt;/xs:schema&gt;&#xA;&lt;/NewDataSet&gt;">
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          <x:Boolean x:Key="IsPinned">False</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+    </ui:BuildDataTable>
+    <ui:ForEachRow CurrentIndex="{x:Null}" DataTable="[auxReportIBDT]" DisplayName="For Each Row" sap:VirtualizedContainerService.HintSize="713,51" sap2010:WorkflowViewState.IdRef="ForEachRow_1">
+      <ui:ForEachRow.Body>
+        <ActivityAction x:TypeArguments="sd:DataRow">
+          <ActivityAction.Argument>
+            <DelegateInArgument x:TypeArguments="sd:DataRow" Name="row" />
+          </ActivityAction.Argument>
+          <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="376,1258" sap2010:WorkflowViewState.IdRef="Sequence_10">
+            <Sequence.Variables>
+              <Variable x:TypeArguments="x:String" Name="extractedDate" />
+              <Variable x:TypeArguments="x:String" Name="extractedAgent_Name" />
+              <Variable x:TypeArguments="x:String" Name="extractedLogin_ID" />
+              <Variable x:TypeArguments="x:TimeSpan" Name="extractedAux_time" />
+              <Variable x:TypeArguments="x:TimeSpan" Name="extractedCQ" />
+              <Variable x:TypeArguments="x:TimeSpan" Name="extractedLagged" />
+              <Variable x:TypeArguments="x:TimeSpan" Name="extractedLogin" />
+              <Variable x:TypeArguments="x:TimeSpan" Name="extractedMB" />
+              <Variable x:TypeArguments="x:TimeSpan" Name="extractedSB" />
+              <Variable x:TypeArguments="x:TimeSpan" Name="extractedSE" />
+              <Variable x:TypeArguments="x:TimeSpan" Name="extractedTR" />
+            </Sequence.Variables>
+            <sap:WorkflowViewStateService.ViewState>
+              <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+              </scg:Dictionary>
+            </sap:WorkflowViewStateService.ViewState>
+            <ui:GetRowItem Column="{x:Null}" ColumnIndex="{x:Null}" ColumnName="Date" DisplayName="Get Row Date" sap:VirtualizedContainerService.HintSize="334,64" sap2010:WorkflowViewState.IdRef="GetRowItem_1" Row="[row]">
+              <ui:GetRowItem.Value>
+                <OutArgument x:TypeArguments="x:String">[extractedDate]</OutArgument>
+              </ui:GetRowItem.Value>
+            </ui:GetRowItem>
+            <ui:GetRowItem Column="{x:Null}" ColumnIndex="{x:Null}" ColumnName="Agent_Name" DisplayName="Get Row Agent Name" sap:VirtualizedContainerService.HintSize="334,64" sap2010:WorkflowViewState.IdRef="GetRowItem_2" Row="[row]">
+              <ui:GetRowItem.Value>
+                <OutArgument x:TypeArguments="x:String">[extractedAgent_Name]</OutArgument>
+              </ui:GetRowItem.Value>
+            </ui:GetRowItem>
+            <ui:GetRowItem Column="{x:Null}" ColumnIndex="{x:Null}" ColumnName="Login_ID" DisplayName="Get Row Login ID" sap:VirtualizedContainerService.HintSize="334,64" sap2010:WorkflowViewState.IdRef="GetRowItem_3" Row="[row]">
+              <ui:GetRowItem.Value>
+                <OutArgument x:TypeArguments="x:String">[extractedLogin_ID]</OutArgument>
+              </ui:GetRowItem.Value>
+            </ui:GetRowItem>
+            <ui:GetRowItem Column="{x:Null}" ColumnIndex="{x:Null}" ColumnName="AUX_Time" DisplayName="Get Row Aux time" sap:VirtualizedContainerService.HintSize="334,64" sap2010:WorkflowViewState.IdRef="GetRowItem_4" Row="[row]">
+              <ui:GetRowItem.Value>
+                <OutArgument x:TypeArguments="x:TimeSpan">[extractedAux_time]</OutArgument>
+              </ui:GetRowItem.Value>
+            </ui:GetRowItem>
+            <ui:GetRowItem Column="{x:Null}" ColumnIndex="{x:Null}" ColumnName="CQ" DisplayName="Get Row CQ" sap:VirtualizedContainerService.HintSize="334,64" sap2010:WorkflowViewState.IdRef="GetRowItem_5" Row="[row]">
+              <ui:GetRowItem.Value>
+                <OutArgument x:TypeArguments="x:TimeSpan">[extractedCQ]</OutArgument>
+              </ui:GetRowItem.Value>
+            </ui:GetRowItem>
+            <ui:GetRowItem Column="{x:Null}" ColumnIndex="{x:Null}" ColumnName="Lagged" DisplayName="Get Row Lagged" sap:VirtualizedContainerService.HintSize="334,64" sap2010:WorkflowViewState.IdRef="GetRowItem_6" Row="[row]">
+              <ui:GetRowItem.Value>
+                <OutArgument x:TypeArguments="x:TimeSpan">[extractedLagged]</OutArgument>
+              </ui:GetRowItem.Value>
+            </ui:GetRowItem>
+            <ui:GetRowItem Column="{x:Null}" ColumnIndex="{x:Null}" ColumnName="Login" DisplayName="Get Row Login" sap:VirtualizedContainerService.HintSize="334,64" sap2010:WorkflowViewState.IdRef="GetRowItem_7" Row="[row]">
+              <ui:GetRowItem.Value>
+                <OutArgument x:TypeArguments="x:TimeSpan">[extractedLogin]</OutArgument>
+              </ui:GetRowItem.Value>
+            </ui:GetRowItem>
+            <ui:GetRowItem Column="{x:Null}" ColumnIndex="{x:Null}" ColumnName="MB" DisplayName="Get Row MB" sap:VirtualizedContainerService.HintSize="334,64" sap2010:WorkflowViewState.IdRef="GetRowItem_8" Row="[row]">
+              <ui:GetRowItem.Value>
+                <OutArgument x:TypeArguments="x:TimeSpan">[extractedMB]</OutArgument>
+              </ui:GetRowItem.Value>
+            </ui:GetRowItem>
+            <ui:GetRowItem Column="{x:Null}" ColumnIndex="{x:Null}" ColumnName="SB" DisplayName="Get Row SB" sap:VirtualizedContainerService.HintSize="334,64" sap2010:WorkflowViewState.IdRef="GetRowItem_9" Row="[row]">
+              <ui:GetRowItem.Value>
+                <OutArgument x:TypeArguments="x:TimeSpan">[extractedSB]</OutArgument>
+              </ui:GetRowItem.Value>
+            </ui:GetRowItem>
+            <ui:GetRowItem Column="{x:Null}" ColumnIndex="{x:Null}" ColumnName="SE" DisplayName="Get Row SE" sap:VirtualizedContainerService.HintSize="334,64" sap2010:WorkflowViewState.IdRef="GetRowItem_10" Row="[row]">
+              <ui:GetRowItem.Value>
+                <OutArgument x:TypeArguments="x:TimeSpan">[extractedSE]</OutArgument>
+              </ui:GetRowItem.Value>
+            </ui:GetRowItem>
+            <ui:GetRowItem Column="{x:Null}" ColumnIndex="{x:Null}" ColumnName="TR" DisplayName="Get Row TR" sap:VirtualizedContainerService.HintSize="334,64" sap2010:WorkflowViewState.IdRef="GetRowItem_11" Row="[row]">
+              <ui:GetRowItem.Value>
+                <OutArgument x:TypeArguments="x:TimeSpan">[extractedTR]</OutArgument>
+              </ui:GetRowItem.Value>
+            </ui:GetRowItem>
+            <ui:AddDataRow DataRow="{x:Null}" ArrayRow="[{extractedDate, extractedAgent_Name, extractedLogin_ID, extractedAux_time, extractedCQ, EB, FB, extractedLagged, extractedLogin, extractedMB, NV, extractedSB, extractedSE, extractedTR, Others}]" DataTable="[builtupDT]" DisplayName="Add Data Row" sap:VirtualizedContainerService.HintSize="334,22" sap2010:WorkflowViewState.IdRef="AddDataRow_1" />
+          </Sequence>
+        </ActivityAction>
+      </ui:ForEachRow.Body>
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+          <x:Boolean x:Key="IsPinned">False</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+    </ui:ForEachRow>
+    <Sequence DisplayName="Writing in the intermediate file " sap:VirtualizedContainerService.HintSize="713,362" sap2010:WorkflowViewState.IdRef="Sequence_12">
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          <x:Boolean x:Key="IsPinned">False</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+      <ui:WriteRange AddHeaders="True" DataTable="[builtupDT]" DisplayName="Write Range" sap:VirtualizedContainerService.HintSize="334,115" sap2010:WorkflowViewState.IdRef="WriteRange_1" SheetName="Sheet1" StartingCell="A1" WorkbookPath="[in_intermediateAUXreportFilePath]" />
+      <ui:AppendRange DataTable="[auxReportOBDT]" DisplayName="Append Range" sap:VirtualizedContainerService.HintSize="334,115" sap2010:WorkflowViewState.IdRef="AppendRange_1" SheetName="Sheet1" WorkbookPath="[in_intermediateAUXreportFilePath]" />
+    </Sequence>
+    <ui:BuildDataTable DataTable="[calculatedDT]" DisplayName="Build Data Table" sap:VirtualizedContainerService.HintSize="526,59" sap2010:WorkflowViewState.IdRef="BuildDataTable_2" TableInfo="&lt;NewDataSet&gt;&#xA;  &lt;xs:schema id=&quot;NewDataSet&quot; xmlns=&quot;&quot; xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:msdata=&quot;urn:schemas-microsoft-com:xml-msdata&quot;&gt;&#xA;    &lt;xs:element name=&quot;NewDataSet&quot; msdata:IsDataSet=&quot;true&quot; msdata:MainDataTable=&quot;TableName&quot; msdata:UseCurrentLocale=&quot;true&quot;&gt;&#xA;      &lt;xs:complexType&gt;&#xA;        &lt;xs:choice minOccurs=&quot;0&quot; maxOccurs=&quot;unbounded&quot;&gt;&#xA;          &lt;xs:element name=&quot;TableName&quot;&gt;&#xA;            &lt;xs:complexType&gt;&#xA;              &lt;xs:sequence&gt;&#xA;                &lt;xs:element name=&quot;id&quot; type=&quot;xs:string&quot; minOccurs=&quot;0&quot; /&gt;&#xA;                &lt;xs:element name=&quot;Considerable_Hours&quot; type=&quot;xs:duration&quot; minOccurs=&quot;0&quot; /&gt;&#xA;                &lt;xs:element name=&quot;System_Lag&quot; type=&quot;xs:duration&quot; minOccurs=&quot;0&quot; /&gt;&#xA;              &lt;/xs:sequence&gt;&#xA;            &lt;/xs:complexType&gt;&#xA;          &lt;/xs:element&gt;&#xA;        &lt;/xs:choice&gt;&#xA;      &lt;/xs:complexType&gt;&#xA;    &lt;/xs:element&gt;&#xA;  &lt;/xs:schema&gt;&#xA;&lt;/NewDataSet&gt;" />
+    <ui:ReadRange AddHeaders="True" DataTable="[MergedAUXDT]" DisplayName="Reading from intermediate AUX report" sap:VirtualizedContainerService.HintSize="526,87" sap2010:WorkflowViewState.IdRef="ReadRange_3" PreserveFormat="True" SheetName="Sheet1" WorkbookPath="[in_intermediateAUXreportFilePath]">
+      <ui:ReadRange.Range>
+        <InArgument x:TypeArguments="x:String">
+          <Literal x:TypeArguments="x:String" Value="" />
+        </InArgument>
+      </ui:ReadRange.Range>
+    </ui:ReadRange>
+    <ui:ForEachRow CurrentIndex="{x:Null}" DataTable="[MergedAUXDT]" DisplayName="For Each Row" sap:VirtualizedContainerService.HintSize="526,51" sap2010:WorkflowViewState.IdRef="ForEachRow_2">
+      <ui:ForEachRow.Body>
+        <ActivityAction x:TypeArguments="sd:DataRow">
+          <ActivityAction.Argument>
+            <DelegateInArgument x:TypeArguments="sd:DataRow" Name="row" />
+          </ActivityAction.Argument>
+          <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="376,1134" sap2010:WorkflowViewState.IdRef="Sequence_14">
+            <Sequence.Variables>
+              <Variable x:TypeArguments="x:String" Name="idAll" />
+              <Variable x:TypeArguments="x:TimeSpan" Name="cqAll" />
+              <Variable x:TypeArguments="x:TimeSpan" Name="fbAll" />
+              <Variable x:TypeArguments="x:TimeSpan" Name="seAll" />
+              <Variable x:TypeArguments="x:TimeSpan" Name="trAll" />
+              <Variable x:TypeArguments="x:TimeSpan" Name="laggedAll" />
+              <Variable x:TypeArguments="x:TimeSpan" Name="nvAll" />
+            </Sequence.Variables>
+            <sap:WorkflowViewStateService.ViewState>
+              <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+              </scg:Dictionary>
+            </sap:WorkflowViewStateService.ViewState>
+            <ui:GetRowItem Column="{x:Null}" ColumnIndex="{x:Null}" ColumnName="Login_ID" DisplayName="Get Row id" sap:VirtualizedContainerService.HintSize="334,64" sap2010:WorkflowViewState.IdRef="GetRowItem_12" Row="[row]">
+              <ui:GetRowItem.Value>
+                <OutArgument x:TypeArguments="x:String">[idAll]</OutArgument>
+              </ui:GetRowItem.Value>
+            </ui:GetRowItem>
+            <ui:GetRowItem Column="{x:Null}" ColumnIndex="{x:Null}" ColumnName="CQ" DisplayName="Get Row cq" sap:VirtualizedContainerService.HintSize="334,64" sap2010:WorkflowViewState.IdRef="GetRowItem_13" Row="[row]">
+              <ui:GetRowItem.Value>
+                <OutArgument x:TypeArguments="x:TimeSpan">[cqAll]</OutArgument>
+              </ui:GetRowItem.Value>
+            </ui:GetRowItem>
+            <ui:GetRowItem Column="{x:Null}" ColumnIndex="{x:Null}" ColumnName="FB" DisplayName="Get Row fb" sap:VirtualizedContainerService.HintSize="334,64" sap2010:WorkflowViewState.IdRef="GetRowItem_14" Row="[row]">
+              <ui:GetRowItem.Value>
+                <OutArgument x:TypeArguments="x:TimeSpan">[fbAll]</OutArgument>
+              </ui:GetRowItem.Value>
+            </ui:GetRowItem>
+            <ui:GetRowItem Column="{x:Null}" ColumnIndex="{x:Null}" ColumnName="SE" DisplayName="Get Row se" sap:VirtualizedContainerService.HintSize="334,64" sap2010:WorkflowViewState.IdRef="GetRowItem_15" Row="[row]">
+              <ui:GetRowItem.Value>
+                <OutArgument x:TypeArguments="x:TimeSpan">[seAll]</OutArgument>
+              </ui:GetRowItem.Value>
+            </ui:GetRowItem>
+            <ui:GetRowItem Column="{x:Null}" ColumnIndex="{x:Null}" ColumnName="TR" DisplayName="Get Row tr" sap:VirtualizedContainerService.HintSize="334,64" sap2010:WorkflowViewState.IdRef="GetRowItem_16" Row="[row]">
+              <ui:GetRowItem.Value>
+                <OutArgument x:TypeArguments="x:TimeSpan">[trAll]</OutArgument>
+              </ui:GetRowItem.Value>
+            </ui:GetRowItem>
+            <ui:GetRowItem Column="{x:Null}" ColumnIndex="{x:Null}" ColumnName="Lagged" DisplayName="Get Row lagged" sap:VirtualizedContainerService.HintSize="334,64" sap2010:WorkflowViewState.IdRef="GetRowItem_17" Row="[row]">
+              <ui:GetRowItem.Value>
+                <OutArgument x:TypeArguments="x:TimeSpan">[laggedAll]</OutArgument>
+              </ui:GetRowItem.Value>
+            </ui:GetRowItem>
+            <ui:GetRowItem Column="{x:Null}" ColumnIndex="{x:Null}" ColumnName="NV" DisplayName="Get Row nv" sap:VirtualizedContainerService.HintSize="334,64" sap2010:WorkflowViewState.IdRef="GetRowItem_18" Row="[row]">
+              <ui:GetRowItem.Value>
+                <OutArgument x:TypeArguments="x:TimeSpan">[nvAll]</OutArgument>
+              </ui:GetRowItem.Value>
+            </ui:GetRowItem>
+            <Sequence DisplayName="Calclulating CH and  SL" sap:VirtualizedContainerService.HintSize="334,252" sap2010:WorkflowViewState.IdRef="Sequence_13">
+              <sap:WorkflowViewStateService.ViewState>
+                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                  <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                </scg:Dictionary>
+              </sap:WorkflowViewStateService.ViewState>
+              <Assign sap:VirtualizedContainerService.HintSize="262,60" sap2010:WorkflowViewState.IdRef="Assign_1">
+                <Assign.To>
+                  <OutArgument x:TypeArguments="x:TimeSpan">[considerable_hours]</OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="x:TimeSpan">[cqAll + fbAll + seAll + trAll]</InArgument>
+                </Assign.Value>
+              </Assign>
+              <Assign sap:VirtualizedContainerService.HintSize="262,60" sap2010:WorkflowViewState.IdRef="Assign_2">
+                <Assign.To>
+                  <OutArgument x:TypeArguments="x:TimeSpan">[system_lag]</OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="x:TimeSpan">[laggedAll + nvAll]</InArgument>
+                </Assign.Value>
+              </Assign>
+            </Sequence>
+            <ui:AddDataRow DataRow="{x:Null}" ArrayRow="[{idAll, considerable_hours, system_lag}]" DataTable="[calculatedDT]" DisplayName="Add Data Row" sap:VirtualizedContainerService.HintSize="334,22" sap2010:WorkflowViewState.IdRef="AddDataRow_2" />
+          </Sequence>
+        </ActivityAction>
+      </ui:ForEachRow.Body>
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+          <x:Boolean x:Key="IsPinned">False</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+    </ui:ForEachRow>
+    <ui:JoinDataTables DataTable1="[MergedAUXDT]" DataTable2="[calculatedDT]" DisplayName="Join Data Tables" sap:VirtualizedContainerService.HintSize="526,59" sap2010:WorkflowViewState.IdRef="JoinDataTables_1" JoinType="Inner" OutputDataTable="[joined1DT]">
+      <ui:JoinDataTables.Arguments>
+        <scg:List x:TypeArguments="ui:JoinOperationArgument" Capacity="4">
+          <ui:JoinOperationArgument Operand="{x:Null}" BooleanOperator="And" Operator="EQ">
+            <ui:JoinOperationArgument.Column1>
+              <InArgument x:TypeArguments="x:String">["Login_ID"]</InArgument>
+            </ui:JoinOperationArgument.Column1>
+            <ui:JoinOperationArgument.Column2>
+              <InArgument x:TypeArguments="x:String">["id"]</InArgument>
+            </ui:JoinOperationArgument.Column2>
+          </ui:JoinOperationArgument>
+        </scg:List>
+      </ui:JoinDataTables.Arguments>
+    </ui:JoinDataTables>
+    <ui:RemoveDataColumn Column="{x:Null}" ColumnIndex="{x:Null}" ColumnName="id" DataTable="[joined1DT]" DisplayName="Remove Data Column" sap:VirtualizedContainerService.HintSize="526,22" sap2010:WorkflowViewState.IdRef="RemoveDataColumn_1" />
+    <ui:JoinDataTables DataTable1="[joined1DT]" DataTable2="[in_modifiedTeamlistDT]" DisplayName="Join Data Tables" sap:VirtualizedContainerService.HintSize="526,59" sap2010:WorkflowViewState.IdRef="JoinDataTables_2" JoinType="Inner" OutputDataTable="[out_AuxReportFinalDT]">
+      <ui:JoinDataTables.Arguments>
+        <scg:List x:TypeArguments="ui:JoinOperationArgument" Capacity="4">
+          <ui:JoinOperationArgument Operand="{x:Null}" BooleanOperator="And" Operator="EQ">
+            <ui:JoinOperationArgument.Column1>
+              <InArgument x:TypeArguments="x:String">["Login_ID"]</InArgument>
+            </ui:JoinOperationArgument.Column1>
+            <ui:JoinOperationArgument.Column2>
+              <InArgument x:TypeArguments="x:String">["id"]</InArgument>
+            </ui:JoinOperationArgument.Column2>
+          </ui:JoinOperationArgument>
+        </scg:List>
+      </ui:JoinDataTables.Arguments>
+    </ui:JoinDataTables>
+    <ui:RemoveDataColumn Column="{x:Null}" ColumnIndex="{x:Null}" ColumnName="Id" DataTable="[out_AuxReportFinalDT]" DisplayName="Remove Data Column" sap:VirtualizedContainerService.HintSize="526,22" sap2010:WorkflowViewState.IdRef="RemoveDataColumn_2" />
+    <ui:WriteRange AddHeaders="True" DataTable="[out_AuxReportFinalDT]" DisplayName="Write Range" sap:VirtualizedContainerService.HintSize="526,115" sap2010:WorkflowViewState.IdRef="WriteRange_2" SheetName="Sheet1" StartingCell="A1" WorkbookPath="[in_testAUXreportFilePath]" />
+  </Sequence>
+</Activity>

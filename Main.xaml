@@ -1,0 +1,161 @@
+<Activity mc:Ignorable="sap sap2010" x:Class="Main" mva:VisualBasic.Settings="{x:Null}" sap:VirtualizedContainerService.HintSize="441,1230" sap2010:WorkflowViewState.IdRef="ActivityBuilder_1" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:sd="clr-namespace:System.Data;assembly=System.Data" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <TextExpression.NamespacesForImplementation>
+    <scg:List x:TypeArguments="x:String" Capacity="22">
+      <x:String>System.Activities</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>System.Activities.Expressions</x:String>
+      <x:String>System.Activities.Validation</x:String>
+      <x:String>System.Activities.XamlIntegration</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>System</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Diagnostics</x:String>
+      <x:String>System.Drawing</x:String>
+      <x:String>System.IO</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Net.Mail</x:String>
+      <x:String>System.Xml</x:String>
+      <x:String>System.Xml.Linq</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>System.Windows.Markup</x:String>
+      <x:String>System.Xml.Serialization</x:String>
+    </scg:List>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <scg:List x:TypeArguments="AssemblyReference" Capacity="17">
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Drawing</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>System.Data.Entity</AssemblyReference>
+    </scg:List>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence sap:VirtualizedContainerService.HintSize="421,1130" sap2010:WorkflowViewState.IdRef="Sequence_2">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="sd:DataTable" Name="arg_DT" />
+      <Variable x:TypeArguments="x:String" Name="passingAUXreportFilePath" />
+      <Variable x:TypeArguments="x:String" Name="passingAUXintermediateFilePath" />
+      <Variable x:TypeArguments="x:String" Name="passingAUXtestFilePath" />
+      <Variable x:TypeArguments="x:String" Name="passingPathToORT" />
+      <Variable x:TypeArguments="x:String" Name="passing11colintermediateFilePath" />
+      <Variable x:TypeArguments="x:String" Name="passing11coltestFilePath" />
+      <Variable x:TypeArguments="x:String" Name="passing12colintermediateFilePath" />
+      <Variable x:TypeArguments="x:String" Name="passing12coltestFilePath" />
+      <Variable x:TypeArguments="x:String" Name="passingPath" />
+      <Variable x:TypeArguments="x:String" Name="passingPathOfInputData" />
+      <Variable x:TypeArguments="x:String" Name="passingCollaboratedReportFilePath" />
+      <Variable x:TypeArguments="sd:DataTable" Name="passingAuxReportFinalDT" />
+      <Variable x:TypeArguments="sd:DataTable" Name="passing11colFinalDT" />
+      <Variable x:TypeArguments="sd:DataTable" Name="passing12colFinalDT" />
+      <Variable x:TypeArguments="sd:DataTable" Name="mergeIBOBDT" />
+      <Variable x:TypeArguments="sd:DataTable" Name="finalLoginLogoutDT" />
+      <Variable x:TypeArguments="sd:DataTable" Name="passingAuxDT" />
+      <Variable x:TypeArguments="x:String" Name="currentWorkingDate" />
+      <Variable x:TypeArguments="x:String" Name="TempCurrentWorkingDate" />
+      <Variable x:TypeArguments="x:Int32" Name="passingCurrentDate" />
+      <Variable x:TypeArguments="x:Int32" Name="passingCurrentMonth" />
+      <Variable x:TypeArguments="x:Int32" Name="passingCurrentYear" />
+      <Variable x:TypeArguments="x:String" Name="passingPathToTeamlistDataPath" />
+    </Sequence.Variables>
+    <sap:WorkflowViewStateService.ViewState>
+      <scg:Dictionary x:TypeArguments="x:String, x:Object">
+        <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+      </scg:Dictionary>
+    </sap:WorkflowViewStateService.ViewState>
+    <ui:KillProcess ContinueOnError="{x:Null}" Process="{x:Null}" DisplayName="Kill Process" sap:VirtualizedContainerService.HintSize="379,22" sap2010:WorkflowViewState.IdRef="KillProcess_1" ProcessName="EXCEL" />
+    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke FilePathPool workflow" sap:VirtualizedContainerService.HintSize="379,87" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_5" UnSafe="False" WorkflowFileName="FilePathPool.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <OutArgument x:TypeArguments="x:String" x:Key="out_AUXreportFilePath">[passingAUXreportFilePath]</OutArgument>
+        <OutArgument x:TypeArguments="x:String" x:Key="out_AUXreportIntermediateFilePath">[passingAUXintermediateFilePath]</OutArgument>
+        <OutArgument x:TypeArguments="x:String" x:Key="out_AUXreportTestFilePath">[passingAUXtestFilePath]</OutArgument>
+        <OutArgument x:TypeArguments="x:String" x:Key="out_PathToORT">[passingPathToORT]</OutArgument>
+        <OutArgument x:TypeArguments="x:String" x:Key="out_11colintermediateResultFilePath">[passing11colintermediateFilePath]</OutArgument>
+        <OutArgument x:TypeArguments="x:String" x:Key="out_11coltestResultFilePath">[passing11coltestFilePath]</OutArgument>
+        <OutArgument x:TypeArguments="x:String" x:Key="out_12colintermediateResultFilePath">[passing12colintermediateFilePath]</OutArgument>
+        <OutArgument x:TypeArguments="x:String" x:Key="out_12coltestResultFilePath">[passing12coltestFilePath]</OutArgument>
+        <OutArgument x:TypeArguments="x:String" x:Key="out_pathToInputData">[passingPathOfInputData]</OutArgument>
+        <OutArgument x:TypeArguments="x:String" x:Key="out_CollaboratedReport">[passingCollaboratedReportFilePath]</OutArgument>
+        <OutArgument x:TypeArguments="x:Int32" x:Key="out_currentDate">[passingCurrentDate]</OutArgument>
+        <OutArgument x:TypeArguments="x:Int32" x:Key="out_currentMonth">[passingCurrentMonth]</OutArgument>
+        <OutArgument x:TypeArguments="x:Int32" x:Key="out_currentYear">[passingCurrentYear]</OutArgument>
+        <OutArgument x:TypeArguments="x:String" x:Key="out_PathToTeamlistData">[passingPathToTeamlistDataPath]</OutArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke teamlist calculation workflow" sap:VirtualizedContainerService.HintSize="379,87" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" UnSafe="False" WorkflowFileName="teamlist calculation.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_modifiedTeamlistDT">[arg_DT]</OutArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_filePathToORT">[passingPathToORT]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_filePathToTeamlistData">[passingPathToTeamlistDataPath]</InArgument>
+        <InArgument x:TypeArguments="x:Int32" x:Key="in_currentDate">[passingCurrentDate]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_collaboratedReportFilePath">[passingCollaboratedReportFilePath]</InArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke AUX_Report_v2 workflow" sap:VirtualizedContainerService.HintSize="379,87" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_9" UnSafe="False" WorkflowFileName="AUX_Report_v2.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <InArgument x:TypeArguments="sd:DataTable" x:Key="in_modifiedTeamlistDT">[arg_DT]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_pathToInputData">[passingPathOfInputData]</InArgument>
+        <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_AuxReportDT">[passingAuxDT]</OutArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke MargeIBOB workflow for Login Logout" sap:VirtualizedContainerService.HintSize="379,87" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_7" UnSafe="False" WorkflowFileName="MargeIBOB.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_OBDT" />
+        <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_IBDT">[mergeIBOBDT]</OutArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_ReportData">[passingPathOfInputData]</InArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke MIS_Daily_LoginLogout workflow" sap:VirtualizedContainerService.HintSize="379,87" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_8" UnSafe="False" WorkflowFileName="MIS_Daily_LoginLogout.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <InArgument x:TypeArguments="sd:DataTable" x:Key="in_IBOBMergeDT">[mergeIBOBDT]</InArgument>
+        <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_Final_IBOB">[finalLoginLogoutDT]</OutArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke Calculation and posting 11col of RH and HT to compile IB and ES workflow" sap:VirtualizedContainerService.HintSize="379,87" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_2" UnSafe="False" WorkflowFileName="Calculation and posting 11col of RH and HT to compile IB and ES.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <InOutArgument x:TypeArguments="sd:DataTable" x:Key="inputDT" />
+        <InArgument x:TypeArguments="x:String" x:Key="in_filePathOfIntermediateFile">[passing11colintermediateFilePath]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_testResultFilePath">[passing11coltestFilePath]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_pathToInputData">[passingPathOfInputData]</InArgument>
+        <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_11colFinalDT">[passing11colFinalDT]</OutArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke Calculation and posting 12col of RH and HT to compile IB and ES  workflow" sap:VirtualizedContainerService.HintSize="379,87" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_3" UnSafe="False" WorkflowFileName="Calculation and posting 12col of RH and HT to compile IB and ES .xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <InArgument x:TypeArguments="x:String" x:Key="inputdt" />
+        <InArgument x:TypeArguments="sd:DataTable" x:Key="in_modifiedTeamlistDT">[arg_DT]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_filePathOfIntermediateFile">[passing12colintermediateFilePath]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_testResultFilePath">[passing12coltestFilePath]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_pathToInputData">[passingPathOfInputData]</InArgument>
+        <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_12colFinalDT">[passing12colFinalDT]</OutArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke Writing to Collaborated Report workflow" sap:VirtualizedContainerService.HintSize="379,87" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_6" UnSafe="False" WorkflowFileName="Writing to Collaborated Report.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <InArgument x:TypeArguments="x:String" x:Key="in_CollaboratedReportFilePath">[passingCollaboratedReportFilePath]</InArgument>
+        <InArgument x:TypeArguments="sd:DataTable" x:Key="in_11colDT">[passing11colFinalDT]</InArgument>
+        <InArgument x:TypeArguments="sd:DataTable" x:Key="in_12colDT">[passing12colFinalDT]</InArgument>
+        <InArgument x:TypeArguments="sd:DataTable" x:Key="in_LoginLogoutDT">[finalLoginLogoutDT]</InArgument>
+        <InArgument x:TypeArguments="sd:DataTable" x:Key="in_AUXreportDT">[passingAuxDT]</InArgument>
+        <InArgument x:TypeArguments="x:Int32" x:Key="in_currentDate">[passingCurrentDate]</InArgument>
+        <InArgument x:TypeArguments="x:Int32" x:Key="in_currentMonth">[passingCurrentMonth]</InArgument>
+        <InArgument x:TypeArguments="x:Int32" x:Key="in_currentYear">[passingCurrentYear]</InArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+  </Sequence>
+</Activity>
